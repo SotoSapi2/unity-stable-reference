@@ -29,7 +29,7 @@ public class StableWrapper<T> : IStableWrapper<T> where T : new()
 [SuppressMessage("Design", "CA1000:Do not declare static members on generic types")]
 [SuppressMessage("Usage", "CA2225:Operator overloads have named alternates")]
 [Serializable]
-public struct StableReference<T> where T : notnull
+public struct StableReference<T> where T : class
 {
     [UnityEngine.SerializeReference]
     private IStableWrapper? wrapper;
@@ -37,6 +37,8 @@ public struct StableReference<T> where T : notnull
     public T Value => wrapper is not null ? 
         ((IStableWrapper<T>)wrapper).Value : 
         throw new NullReferenceException("Accessed StableReference instance doesn't have value assigned.");
+    
+    public bool IsValuePresent => wrapper is null;
 
     public static implicit operator T(StableReference<T> self) => self.Value;
 }
