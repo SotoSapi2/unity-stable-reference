@@ -1,7 +1,25 @@
 using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityStableReference;
+
+public class Foo : MonoBehaviour
+{
+    public StableReference<IFoo> Reference;
+
+    public List<NullableStableReference<IFoo>> ReferenceList;
+    
+    private void Start()
+    {
+        Reference.Value.Print();
+
+        foreach (var reference in ReferenceList)
+        {
+            reference.Value?.Print();
+        }
+    }
+}
 
 public interface IFoo
 {
@@ -36,15 +54,5 @@ public class FooImpl2 : IFoo
     public void Print()
     {
         Debug.Log("FooImpl2 " + Float);
-    }
-}
-
-public class Foo : MonoBehaviour
-{
-    public StableReference<IFoo> Reference;
-
-    private void Start()
-    {
-        Reference.Value.Print();
     }
 }

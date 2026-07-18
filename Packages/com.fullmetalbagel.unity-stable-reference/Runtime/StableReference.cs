@@ -5,8 +5,7 @@ namespace UnityStableReference;
 
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Assembly)]
 public sealed class StableWrapperCodeGenAttribute : Attribute
-{
-}
+{ }
 
 [SuppressMessage("Design", "CA1040:Avoid empty interfaces")]
 public interface IStableWrapper { }
@@ -17,24 +16,42 @@ public interface IStableWrapper<out T> : IStableWrapper
 }
 
 [Serializable]
-public class StableWrapper<T> : IStableWrapper<T>
+public class StableWrapper<T> : IStableWrapper<T> where T : new()
 {
 #if UNITY_5_6_OR_NEWER
-    [field: UnityEngine.SerializeField]
+    [UnityEngine.SerializeField]
 #endif
-    public T Value { get; private set; } = default!;
+    private T value = new();
+
+    public T Value => value;
 }
 
 [SuppressMessage("Design", "CA1000:Do not declare static members on generic types")]
 [SuppressMessage("Usage", "CA2225:Operator overloads have named alternates")]
 [Serializable]
-public record struct StableReference<T>() where T : notnull
+public record StableReference<T> where T : class
 {
-    public static string WrapperPropertyName => nameof(_wrapper);
-#if UNITY_5_6_OR_NEWER
     [UnityEngine.SerializeReference]
-#endif
-    private IStableWrapper _wrapper = default!;
-    public T Value => ((IStableWrapper<T>)_wrapper).Value;
+    private IStableWrapper? wrapper;
+
+    public T Value => wrapper is not null ? 
+        ((IStableWrapper<T>)wrapper).Value : 
+        throw new NullReferenceException("Accessed StableReference instance doesn't have value assigned.");
+
     public static implicit operator T(StableReference<T> self) => self.Value;
+}
+
+[SuppressMessage("Design", "CA1000:Do not declare static members on generic types")]
+[SuppressMessage("Usage", "CA2225:Operator overloads have named alternates")]
+[Serializable]
+public record NullableStableReference<T> where T : class
+{
+    [UnityEngine.SerializeReference]
+    private IStableWrapper? wrapper;
+
+    public T? Value => wrapper is not null ? 
+        ((IStableWrapper<T>)wrapper).Value : 
+        null;
+
+    public static implicit operator T?(NullableStableReference<T> self) => self.Value;
 }
