@@ -56,3 +56,14 @@ public class FooImpl2 : IFoo
         Debug.Log("FooImpl2 " + Float);
     }
 }
+
+[Serializable]
+public class FooImpl4 : IFoo // Shouldn't be shown in dropdown cause this class doesn't have required attributes.
+{
+    public float Float;
+    
+    public void Print()
+    {
+        Debug.Log("FooImpl2 " + Float);
+    }
+}

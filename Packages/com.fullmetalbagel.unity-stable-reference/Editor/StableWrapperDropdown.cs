@@ -62,13 +62,8 @@ namespace UnityStableReference.Editor
             var nullItem = new Item("None", null);
             var root = new AdvancedDropdownItem(RootName);
             root.AddChild(nullItem);
-
-            var stableTypes = TypeCache.GetTypesDerivedFrom(typeof(StableWrapper<>));
-            var filterIterator = stableTypes.SelectMany(wrapperType => wrapperType.GetInterfaces()
-                .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IStableWrapper<>))
-                .Select(i => new QueryRecord(wrapperType, i.GetGenericArguments()[0])));
-
-            foreach (var query in filterIterator)
+            
+            foreach (var query in CreateWrapperTypeIterator())
             {
                 if (query.ReferenceType.IsAbstract)
                 {
@@ -80,6 +75,11 @@ namespace UnityStableReference.Editor
                     continue;
                 }
 
+                if (!IsTypeHaveRequiredAttributes(query.ReferenceType))
+                {
+                    continue;
+                }
+                
                 var flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
                 if (query.WrapperType.GetConstructor(Type.EmptyTypes) == null &&
                     query.WrapperType.GetConstructor(flags, null, Type.EmptyTypes, null) == null)
@@ -92,7 +92,7 @@ namespace UnityStableReference.Editor
 
             return root;
         }
-
+        
         protected override void ItemSelected(AdvancedDropdownItem item)
         {
             if (item is Item scriptItem)
@@ -105,6 +105,19 @@ namespace UnityStableReference.Editor
                 Property.managedReferenceValue = instance;
                 Property.serializedObject.ApplyModifiedProperties();
             }
+        }
+        
+        private static IEnumerable<QueryRecord> CreateWrapperTypeIterator()
+        {
+            var stableTypes = TypeCache.GetTypesDerivedFrom(typeof(StableWrapper<>));
+            return stableTypes.SelectMany(wrapperType => wrapperType.GetInterfaces()
+                .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IStableWrapper<>))
+                .Select(i => new QueryRecord(wrapperType, i.GetGenericArguments()[0])));
+        }
+        
+        private static bool IsTypeHaveRequiredAttributes(Type type)
+        {
+            return NeededAttribute.All(attribute => Attribute.IsDefined(type, attribute));
         }
     }
 }
