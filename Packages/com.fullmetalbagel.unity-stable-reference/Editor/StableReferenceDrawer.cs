@@ -20,7 +20,7 @@ namespace UnityStableReference.Editor
             
             if (wrapperProperty.managedReferenceValue == null)
             {
-                EditorGUILayout.HelpBox($"'{property.name}' property must be set!", MessageType.Error);
+                EditorGUILayout.HelpBox($"'{label.text}' property must be set!", MessageType.Error);
             }
         }
     }
