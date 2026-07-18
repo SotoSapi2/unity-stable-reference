@@ -165,7 +165,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Scripts::Foo
   Reference:
     wrapper:
-      rid: 4955262915928129755
+      rid: 4955262921539059772
   ReferenceList:
   - wrapper:
       rid: 4955262915928129745
@@ -189,11 +189,11 @@ MonoBehaviour:
     - rid: 4955262915928129747
       type: {class: StableWrapper_35FE2D63412D41AA9F0DBB3416F11235, ns: __StableWrapper__, asm: __StableWrapper__}
       data: {}
-    - rid: 4955262915928129755
-      type: {class: StableWrapper_3DDC5AB5736A46919208B5641C9E7DE5, ns: __StableWrapper__, asm: __StableWrapper__}
+    - rid: 4955262921539059772
+      type: {class: StableWrapper_A267E89016F1406E8E008FB9588F3135, ns: __StableWrapper__, asm: __StableWrapper__}
       data:
         value:
-          Float: 0
+          Int: 32
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

@@ -29,7 +29,7 @@ public class StableWrapper<T> : IStableWrapper<T> where T : new()
 [SuppressMessage("Design", "CA1000:Do not declare static members on generic types")]
 [SuppressMessage("Usage", "CA2225:Operator overloads have named alternates")]
 [Serializable]
-public record StableReference<T> where T : class
+public struct StableReference<T> where T : notnull
 {
     [UnityEngine.SerializeReference]
     private IStableWrapper? wrapper;
@@ -44,7 +44,7 @@ public record StableReference<T> where T : class
 [SuppressMessage("Design", "CA1000:Do not declare static members on generic types")]
 [SuppressMessage("Usage", "CA2225:Operator overloads have named alternates")]
 [Serializable]
-public record NullableStableReference<T> where T : class
+public struct NullableStableReference<T> where T : class?
 {
     [UnityEngine.SerializeReference]
     private IStableWrapper? wrapper;
