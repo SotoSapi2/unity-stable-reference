@@ -38,7 +38,7 @@ public struct StableReference<T> where T : class
         ((IStableWrapper<T>)wrapper).Value : 
         throw new NullReferenceException("Accessed StableReference instance doesn't have value assigned.");
     
-    public bool IsValuePresent => wrapper is null;
+    public bool IsValuePresent => wrapper is not null;
 
     public static implicit operator T(StableReference<T> self) => self.Value;
 }
